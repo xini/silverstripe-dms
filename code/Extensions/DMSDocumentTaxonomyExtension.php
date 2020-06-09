@@ -1,4 +1,11 @@
 <?php
+namespace SilverStripeDMS\Extensions;
+
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\ListboxField;
+use SilverStripe\ORM\DataExtension;
+use SilverStripe\Taxonomy\TaxonomyTerm;
 
 class DMSDocumentTaxonomyExtension extends DataExtension
 {

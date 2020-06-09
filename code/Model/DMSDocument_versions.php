@@ -9,6 +9,15 @@
  *
  * @package dms
  */
+namespace SilverStripeDMS\Model;
+
+use SilverStripe\Assets\File;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+use SilverStripeDMS\DMS;
+
 class DMSDocument_versions extends DataObject
 {
 
@@ -18,37 +27,37 @@ class DMSDocument_versions extends DataObject
      */
     public static $enable_versions = true;
 
-    private static $db = array(
+    private static $db = [
         'VersionCounter' => 'Int',
         'VersionViewCount' => 'Int'
-    );
+    ];
 
-    private static $has_one = array(
-        'Document' => 'DMSDocument'
-    );
+    private static $has_one = [
+        'Document' => DMSDocument::class
+    ];
 
-    private static $defaults = array(
+    private static $defaults = [
         'VersionCounter' => 0
-    );
+    ];
 
-    private static $display_fields = array(
+    private static $display_fields = [
         'VersionCounter' => 'Version Counter',
         'FilenameWithoutID' => 'Filename',
         'LastEdited' => 'Last Changed'
-    );
+    ];
 
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'VersionCounter',
         'FilenameWithoutID'
-    );
+    ];
 
-    private static $field_labels = array(
+    private static $field_labels = [
         'FilenameWithoutID'=>'Filename'
-    );
+    ];
 
-    private static $default_sort = array(
+    private static $default_sort = [
         'LastEdited' => 'DESC'
-    );
+    ];
 
 
     /**

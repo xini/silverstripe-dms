@@ -4,6 +4,16 @@
  *
  * See the "document-sets.md" migration guide for more information and use examples.
  */
+namespace SilverStripeDMS\Tasks;
+
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Dev\BuildTask;
+use SilverStripe\ORM\Queries\SQLSelect;
+use SilverStripeDMS\Model\DMSDocument;
+use SilverStripeDMS\Model\DMSDocumentSet;
+
 class MigrateToDocumentSetsTask extends BuildTask
 {
     protected $title = 'DMS 2.0 Migration Tool';
@@ -20,7 +30,7 @@ class MigrateToDocumentSetsTask extends BuildTask
     );
 
     /**
-     * @var SS_HTTPRequest
+     * @var HTTPRequest
      */
     protected $request;
 

@@ -1,4 +1,12 @@
 <?php
+namespace SilverStripeDMS\Model;
+
+use http\Exception\InvalidArgumentException;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Convert;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Versioned\Versioned;
 
 class DMSDocument_Controller extends Controller
 {
@@ -23,7 +31,7 @@ class DMSDocument_Controller extends Controller
      * Returns the document object from the request object's ID parameter.
      * Returns null, if no document found
      *
-     * @param  SS_HTTPRequest $request
+     * @param  HTTPRequest $request
      * @return DMSDocument|null
      */
     protected function getDocumentFromID($request)
@@ -34,11 +42,11 @@ class DMSDocument_Controller extends Controller
         if (strpos($id, 'version') === 0) {
             // Versioned document
             $id = $this->getDocumentIdFromSlug(str_replace('version', '', $id));
-            $doc = DataObject::get_by_id('DMSDocument_versions', $id);
+            $doc = DataObject::get_by_id(DMSDocument_versions::class, $id);
             $this->extend('updateVersionFromID', $doc, $request);
         } else {
             // Normal document
-            $doc = DataObject::get_by_id('DMSDocument', $this->getDocumentIdFromSlug($id));
+            $doc = DataObject::get_by_id(DMSDocument::class, $this->getDocumentIdFromSlug($id));
             $this->extend('updateDocumentFromID', $doc, $request);
         }
 
@@ -66,7 +74,7 @@ class DMSDocument_Controller extends Controller
      * Access the file download without redirecting user, so we can block direct
      * access to documents.
      */
-    public function index(SS_HTTPRequest $request)
+    public function index(HTTPRequest $request)
     {
         $doc = $this->getDocumentFromID($request);
 

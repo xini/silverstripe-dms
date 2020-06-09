@@ -7,36 +7,68 @@
  * @property  Enum SortBy
  * @property Enum SortByDirection
  */
+namespace SilverStripeDMS\Model;
+
+use SilverStripe\CMS\Controllers\CMSPageEditController;
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\FieldGroup;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\GridField\GridFieldButtonRow;
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\Forms\GridField\GridFieldDeleteAction;
+use SilverStripe\Forms\GridField\GridFieldDetailForm;
+use SilverStripe\Forms\GridField\GridFieldFilterHeader;
+use SilverStripe\Forms\GridField\GridFieldPaginator;
+use SilverStripe\Forms\GridField\GridFieldSortableHeader;
+use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\ListboxField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
+use SilverStripe\View\Requirements;
+use SilverStripeDMS\CMS\DMSGridFieldEditButton;
+use SilverStripeDMS\DMS;
+use SilverStripeDMS\Forms\DMSJsonField;
+use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
+
 class DMSDocumentSet extends DataObject
 {
-    private static $db = array(
+    private static $db = [
         'Title' => 'Varchar(255)',
         'KeyValuePairs' => 'Text',
         'SortBy' => "Enum('LastEdited,Created,Title')')",
         'SortByDirection' => "Enum('DESC,ASC')')",
-    );
+    ];
 
-    private static $has_one = array(
-        'Page' => 'SiteTree',
-    );
+    private static $has_one = [
+        'Page' => SiteTree::class,
+    ];
 
-    private static $many_many = array(
-        'Documents' => 'DMSDocument',
-    );
+    private static $many_many = [
+        'Documents' => DMSDocument::class,
+    ];
 
-    private static $many_many_extraFields = array(
-        'Documents' => array(
+    private static $many_many_extraFields = [
+        'Documents' => [
             // Flag indicating if a document was added directly to a set - in which case it is set - or added
             // via the query-builder.
             'ManuallyAdded' => 'Boolean(1)',
             'DocumentSort' => 'Int'
-        ),
-    );
+        ],
+    ];
 
-    private static $summary_fields = array(
+    private static $summary_fields = [
         'Title' => 'Title',
         'Documents.Count' => 'No. Documents'
-    );
+    ];
 
     /**
      * Retrieve a list of the documents in this set. An extension hook is provided before the result is returned.
@@ -281,7 +313,7 @@ class DMSDocumentSet extends DataObject
             return;
         }
 
-        $keyValuesPair = Convert::json2array($this->KeyValuePairs);
+        $keyValuesPair = json_decode($this->KeyValuePairs);
 
         /** @var DMSDocument $dmsDoc */
         $dmsDoc = singleton('DMSDocument');
@@ -305,7 +337,7 @@ class DMSDocumentSet extends DataObject
      */
     protected function addEmbargoConditions(DataList $documents)
     {
-        $now = SS_Datetime::now()->Rfc2822();
+        $now = DBDatetime::now()->Rfc2822();
 
         return $documents->where(
             "\"EmbargoedIndefinitely\" = 0 AND "
@@ -348,7 +380,7 @@ class DMSDocumentSet extends DataObject
         );
     }
 
-    protected function validate()
+    public function validate()
     {
         $result = parent::validate();
 
@@ -404,7 +436,7 @@ class DMSDocumentSet extends DataObject
     public function getGlobalPermission(Member $member = null)
     {
         if (!$member || !(is_a($member, 'Member')) || is_numeric($member)) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
 
         $result = ($member &&

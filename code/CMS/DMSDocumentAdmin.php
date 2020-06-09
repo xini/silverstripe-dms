@@ -1,4 +1,9 @@
 <?php
+namespace SilverStripeDMS\CMS;
+
+use SilverStripe\Admin\ModelAdmin;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\View\Requirements;
 
 class DMSDocumentAdmin extends ModelAdmin
 {

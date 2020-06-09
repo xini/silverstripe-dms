@@ -9,6 +9,13 @@
  * search across dozens of columns and tables - but for a couple of hundred pages
  * and occasionally use its a feasible solution.
  */
+namespace SilverStripeDMS\Tools;
+
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataObject;
+use SilverStripeDMS\DMS;
+
 class ShortCodeRelationFinder
 {
 

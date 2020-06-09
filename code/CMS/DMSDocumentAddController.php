@@ -3,6 +3,12 @@
 /**
  * @package dms
  */
+namespace SilverStripeDMS\CMS;
+
+use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripeDMS\Model\DMSDocumentSet;
+
 class DMSDocumentAddController extends LeftAndMain
 {
     private static $url_segment = 'pages/adddocument';

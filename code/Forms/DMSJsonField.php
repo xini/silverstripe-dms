@@ -3,6 +3,12 @@
 /**
  * Combines form inputs into a key-value pair
  */
+namespace SilverStripeDMS\Forms;
+
+use SilverStripe\Core\Convert;
+use SilverStripe\Forms\CompositeField;
+use SilverStripe\Forms\FieldList;
+
 class DMSJsonField extends CompositeField
 {
     public function __construct($name, $children = null)
@@ -81,7 +87,7 @@ class DMSJsonField extends CompositeField
         $result = null;
         if (is_array($this->value)) {
             $this->value = $this->arrayFilterEmptyRecursive($this->value);
-            $result = (!empty($this->value)) ? Convert::array2json($this->value) : $result;
+            $result = (!empty($this->value)) ? json_encode($this->value) : $result;
         } else {
             $result = parent::dataValue();
         }
@@ -99,7 +105,7 @@ class DMSJsonField extends CompositeField
     {
         $this->value = $value;
         if (is_string($value) && !empty($value)) {
-            $value = Convert::json2array($value);
+            $value = json_decode($value);
         } elseif (!is_array($value)) {
             $value = array($value);
         }

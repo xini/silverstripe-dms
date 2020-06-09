@@ -4,6 +4,8 @@
  * object in an instance of the DMSInterface. All write operations on the DMSDocument create a new relation, so we
  * never need to explicitly call the write() method on the DMSDocument DataObject
  */
+namespace SilverStripeDMS\Interfaces;
+
 interface DMSDocumentInterface
 {
     /**

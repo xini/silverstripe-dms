@@ -12,11 +12,31 @@
  * @author Julian Seidenberg
  * @package dms
  */
+namespace SilverStripeDMS\CMS;
+
+use SilverStripe\AssetAdmin\Forms\UploadField;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\Validator;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\SS_List;
+use SilverStripe\View\Requirements;
+use SilverStripeDMS\CMS\DMSUploadField_ItemHandler;
+use SilverStripeDMS\Model\DMSDocument;
+use SilverStripeDMS\Model\DMSDocumentSet;
+
 class DMSUploadField extends UploadField
 {
-    private static $allowed_actions = array(
+    use Injectable;
+
+    private static $allowed_actions = [
         "upload",
-    );
+    ];
 
     /**
      * The temporary folder name to store files in during upload
@@ -62,10 +82,10 @@ class DMSUploadField extends UploadField
     /**
      * Action to handle upload of a single file
      *
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      * @return string json
      */
-    public function upload(SS_HTTPRequest $request)
+    public function upload(HTTPRequest $request)
     {
         if ($recordId = $request->postVar('ID')) {
             $this->setRecord(DMSDocumentSet::get()->byId($recordId));
@@ -132,14 +152,14 @@ class DMSUploadField extends UploadField
                 // Search for relations that can hold the uploaded files.
                 if ($relationClass = $this->getRelationAutosetClass()) {
                     // Create new object explicitly. Otherwise rely on Upload::load to choose the class.
-                    $fileObject = SS_Object::create($relationClass);
+                    $fileObject = Injector::inst()->create($relationClass);
                 }
             }
 
             // Get the uploaded file into a new file object.
             try {
                 $this->upload->loadIntoFile($tmpfile, $fileObject, $this->getFolderName());
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 // we shouldn't get an error here, but just in case
                 $return['error'] = $e->getMessage();
             }
@@ -168,7 +188,7 @@ class DMSUploadField extends UploadField
                 }
             }
         }
-        $response = new SS_HTTPResponse(Convert::raw2json(array($return)));
+        $response = new HTTPResponse(json_encode(array($return)));
         $response->addHeader('Content-Type', 'text/plain');
         return $response;
     }

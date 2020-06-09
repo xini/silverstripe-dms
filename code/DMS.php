@@ -1,6 +1,20 @@
 <?php
-class DMS extends SS_Object implements DMSInterface
+namespace SilverStripeDMS;
+
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
+use SilverStripeDMS\Exceptions\FileNotFoundException;
+use SilverStripeDMS\Interfaces\DMSInterface;
+
+class DMS implements DMSInterface
 {
+    use Extensible;
+    use Injectable;
+    use Configurable;
+
     /**
      * Folder to store the documents in
      *
@@ -185,6 +199,6 @@ class DMS extends SS_Object implements DMSInterface
      */
     public function getShortcodeHandlerKey()
     {
-        return (string) Config::inst()->get('DMS', 'shortcode_handler_key');
+        return (string) Config::inst()->get(DMS::class, 'shortcode_handler_key');
     }
 }

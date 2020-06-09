@@ -2,6 +2,12 @@
 /**
  * Creates default taxonomy type records if they don't exist already
  */
+namespace SilverStripeDMS\Extensions;
+
+use SilverStripe\Core\Config\Config;
+use SilverStripe\ORM\DataExtension;
+use SilverStripe\Taxonomy\TaxonomyType;
+
 class DMSTaxonomyTypeExtension extends DataExtension
 {
     /**

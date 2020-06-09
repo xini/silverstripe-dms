@@ -8,6 +8,11 @@
  * 10000 files per folder is a good amount)
  *
  */
+
+namespace SilverStripeDMS\Interfaces;
+
+use SilverStripe\CMS\Model\SiteTree;
+
 interface DMSInterface
 {
     /**

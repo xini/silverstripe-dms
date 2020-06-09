@@ -3,6 +3,11 @@
 /**
  * Custom ItemRequest class the provides custom delete behaviour for the CMSFields of DMSDocument
  */
+namespace SilverStripeDMS\CMS;
+
+use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
+use SilverStripeDMS\Tools\ShortCodeRelationFinder;
+
 class DMSGridFieldDetailForm_ItemRequest extends GridFieldDetailForm_ItemRequest
 {
     private static $allowed_actions = array('ItemEditForm');

@@ -3,6 +3,19 @@
 /**
  * @package dms
  */
+namespace SilverStripeDMS\Extensions;
+
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataExtension;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
+use SilverStripe\Versioned\Versioned;
+use SilverStripeDMS\Model\DMSDocumentSet;
+
 class DMSSiteTreeExtension extends DataExtension
 {
     private static $has_many = array(
@@ -18,7 +31,7 @@ class DMSSiteTreeExtension extends DataExtension
 
         // Hides the DocumentSets tab if the user has no permisions
         if (!Permission::checkMember(
-            Member::currentUser(),
+            Security::getCurrentUser(),
             array('ADMIN', 'CMS_ACCESS_DMSDocumentAdmin')
         )
         ) {
@@ -29,7 +42,7 @@ class DMSSiteTreeExtension extends DataExtension
             'DocumentSets',
             false,
             $this->owner->DocumentSets(), //->Sort('DocumentSort'),
-            $config = new GridFieldConfig_RelationEditor
+            $config = new GridFieldConfig_RelationEditor()
         );
         $gridField->addExtraClass('documentsets');
 

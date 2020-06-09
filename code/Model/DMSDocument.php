@@ -26,9 +26,57 @@
  * @property Int LastEditedByID
  *
  */
+namespace SilverStripeDMS\Model;
+
+use SilverStripe\AssetAdmin\Forms\UploadField;
+use SilverStripe\Assets\File;
+use SilverStripe\Assets\Image;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
+use SilverStripe\Forms\CompositeField;
+use SilverStripe\Forms\DateField_Disabled;
+use SilverStripe\Forms\DatetimeField;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\FieldGroup;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\Forms\GridField\GridFieldDetailForm;
+use SilverStripe\Forms\GridField\GridFieldPaginator;
+use SilverStripe\Forms\GridField\GridFieldSortableHeader;
+use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\OptionsetField;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Security\Group;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
+use SilverStripe\Versioned\Versioned;
+use SilverStripe\View\Parsers\URLSegmentFilter;
+use SilverStripe\View\Requirements;
+use SilverStripeDMS\CMS\DMSGridFieldEditButton;
+use SilverStripeDMS\DMS;
+use SilverStripeDMS\CMS\DMSUploadField;
+use SilverStripeDMS\Interfaces\DMSDocumentInterface;
+use SilverStripeDMS\Tools\ShortCodeRelationFinder;
+use Symfony\Component\Config\Definition\Exception\Exception;
+
 class DMSDocument extends DataObject implements DMSDocumentInterface
 {
-    private static $db = array(
+    private static $db = [
         "Filename" => "Varchar(255)", // eg. 3469~2011-energysaving-report.pdf
         "Folder" => "Varchar(255)",    // eg.	0
         "Title" => 'Varchar(1024)', // eg. "Energy Saving Report for Year 2011, New Zealand LandCorp"
@@ -41,30 +89,30 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
         "DownloadBehavior" => 'Enum(array("open","download"), "download")',
         "CanViewType" => "Enum('Anyone, LoggedInUsers, OnlyTheseUsers', 'Anyone')",
         "CanEditType" => "Enum('LoggedInUsers, OnlyTheseUsers', 'LoggedInUsers')",
-    );
+    ];
 
-    private static $belongs_many_many = array(
-        'Sets' => 'DMSDocumentSet'
-    );
+    private static $belongs_many_many = [
+        'Sets' => DMSDocumentSet::class
+    ];
 
-    private static $has_one = array(
-        'CoverImage' => 'Image',
-        'CreatedBy' => 'Member',
-        'LastEditedBy' => 'Member',
-    );
+    private static $has_one = [
+        'CoverImage' => Image::class,
+        'CreatedBy' => Member::class,
+        'LastEditedBy' => Member::class,
+    ];
 
-    private static $many_many = array(
-        'RelatedDocuments' => 'DMSDocument',
-        'ViewerGroups' => 'Group',
-        'EditorGroups' => 'Group',
-    );
+    private static $many_many = [
+        'RelatedDocuments' => DMSDocument::class,
+        'ViewerGroups' => Group::class,
+        'EditorGroups' => Group::class,
+    ];
 
-    private static $display_fields = array(
+    private static $display_fields = [
         'ID' => 'ID',
         'Title' => 'Title',
         'FilenameWithoutID' => 'Filename',
         'LastEdited' => 'Last Edited'
-    );
+    ];
 
     private static $singular_name = 'Document';
 
@@ -101,7 +149,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
     public function canView($member = null)
     {
         if (!$member || !(is_a($member, 'Member')) || is_numeric($member)) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
 
         // extended access checks
@@ -143,7 +191,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
     public function canEdit($member = null)
     {
         if (!$member || !(is_a($member, 'Member')) || is_numeric($member)) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
 
         $results = $this->extend('canEdit', $member);
@@ -178,7 +226,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
     public function canCreate($member = null)
     {
         if (!$member || !(is_a($member, 'Member')) || is_numeric($member)) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
 
         $results = $this->extend('canCreate', $member);
@@ -207,7 +255,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
     public function canDelete($member = null)
     {
         if (!$member || !(is_a($member, 'Member')) || is_numeric($member)) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
 
         $results = $this->extend('canDelete', $member);
@@ -362,7 +410,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
         } elseif ($this->EmbargoedUntilPublished) {
             $embargoed = true;
         } elseif (!empty($this->EmbargoedUntilDate)) {
-            if (SS_Datetime::now()->Value < $this->EmbargoedUntilDate) {
+            if (DBDatetime::now()->Value < $this->EmbargoedUntilDate) {
                 $embargoed = true;
             }
         }
@@ -381,7 +429,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
      */
     public function embargoUntilDate($datetime, $write = true)
     {
-        $this->EmbargoedUntilDate = DBField::create_field('SS_Datetime', $datetime)->Format('Y-m-d H:i:s');
+        $this->EmbargoedUntilDate = DBField::create_field('DBDateTime', $datetime)->Format('Y-m-d H:i:s');
 
         if ($write) {
             $this->write();
@@ -425,7 +473,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
         $expired = false;
 
         if (!empty($this->ExpireAtDate)) {
-            if (SS_Datetime::now()->Value >= $this->ExpireAtDate) {
+            if (DBDatetime::now()->Value >= $this->ExpireAtDate) {
                 $expired = true;
             }
         }
@@ -485,7 +533,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
     public function getVersions()
     {
         if (!DMSDocument_versions::$enable_versions) {
-            throw new Exception("DMSDocument versions are disabled");
+            throw new \Exception("DMSDocument versions are disabled");
         }
 
         return DMSDocument_versions::get_versions($this);
@@ -997,7 +1045,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
         }
 
         // Set user fields
-        if ($currentUserID = Member::currentUserID()) {
+        if ($currentUserID = Security::getCurrentUser()) {
             if (!$this->CreatedByID) {
                 $this->CreatedByID = $currentUserID;
             }
@@ -1221,7 +1269,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
             'RelatedDocuments',
             _t('DMSDocument.RELATEDDOCUMENTS', 'Related Documents'),
             $this->RelatedDocuments(),
-            new GridFieldConfig_RelationEditor
+            new GridFieldConfig_RelationEditor()
         );
 
         $gridFieldConfig = $gridField->getConfig();
@@ -1264,7 +1312,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
      *
      * @return ValidationResult
      */
-    protected function validate()
+    public function validate()
     {
         $valid = parent::validate();
 

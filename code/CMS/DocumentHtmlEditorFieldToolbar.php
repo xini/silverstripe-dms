@@ -2,6 +2,13 @@
 /**
  * Extends the original toolbar with document picking capability - modified lines are commented.
  */
+namespace SilverStripeDMS\CMS;
+
+use SilverStripe\Core\Extension;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\HiddenField;
+use SilverStripeDMS\DMS;
+
 class DocumentHtmlEditorFieldToolbar extends Extension
 {
     public function updateLinkForm(Form $form)

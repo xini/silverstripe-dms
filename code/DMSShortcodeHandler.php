@@ -6,6 +6,12 @@
  *
  * @package dms
  */
+namespace SilverStripeDMS;
+
+use SilverStripe\ErrorPage\ErrorPage;
+use SilverStripe\View\Parsers\ShortcodeParser;
+use SilverStripeDMS\Model\DMSDocument;
+
 class DMSShortcodeHandler
 {
     public static function handle($arguments, $content, ShortcodeParser $parser, $tag, array $extra = array())

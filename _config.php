@@ -1,6 +1,6 @@
 <?php
 
-$config = Config::inst();
+$config = \SilverStripe\Core\Config\Config::inst();
 
 define('DMS_DIR', basename(__DIR__));
 
@@ -12,9 +12,9 @@ if (!file_exists(BASE_PATH . DIRECTORY_SEPARATOR . DMS_DIR)) {
 // with SilverStripe 3.6 (using Object) and SilverStripe 3.7 (using SS_Object)
 if (!class_exists('SS_Object')) class_alias('Object', 'SS_Object');
 
-CMSMenu::remove_menu_item('DMSDocumentAddController');
+\SilverStripe\Admin\CMSMenu::remove_menu_item('DMSDocumentAddController');
 
-ShortcodeParser::get('default')->register(
+\SilverStripe\View\Parsers\ShortcodeParser::get('default')->register(
     $config->get('DMS', 'shortcode_handler_key'),
     array('DMSShortcodeHandler', 'handle')
 );
