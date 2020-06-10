@@ -399,7 +399,7 @@ class DMSDocumentSet extends DataObject
         return $this->getGlobalPermission($member);
     }
 
-    public function canCreate($member = null)
+    public function canCreate($member = null, $context = array())
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {

@@ -223,7 +223,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
      *
      * @return boolean
      */
-    public function canCreate($member = null)
+    public function canCreate($member = null, $context = array())
     {
         if (!$member || !(is_a($member, 'Member')) || is_numeric($member)) {
             $member = Security::getCurrentUser();
