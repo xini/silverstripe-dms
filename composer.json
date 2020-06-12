@@ -1,7 +1,7 @@
 {
     "name": "silverstripe/dms",
     "description": "Adds a Document Management System to SilverStripe ",
-    "type": "silverstripe-vendormodule",
+    "type": "silverstripe-module",
     "keywords": ["silverstripe", "dms", "document", "document management system"],
     "license": "BSD-3-Clause",
     "authors": [{
