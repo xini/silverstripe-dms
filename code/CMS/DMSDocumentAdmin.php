@@ -1,8 +1,14 @@
 <?php
 namespace SilverStripeDMS\CMS;
 
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\Forms\GridField\GridFieldDeleteAction;
+use SilverStripe\Forms\GridField\GridFieldEditButton;
+use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\View\Requirements;
 
 class DMSDocumentAdmin extends ModelAdmin
@@ -49,17 +55,17 @@ class DMSDocumentAdmin extends ModelAdmin
     {
         $gridFieldConfig = $gridField->getConfig();
 
-        $gridFieldConfig->removeComponentsByType('GridFieldEditButton');
-        $gridFieldConfig->addComponent(new DMSGridFieldEditButton(), 'GridFieldDeleteAction');
+        $gridFieldConfig->removeComponentsByType(GridFieldEditButton::class);
+        $gridFieldConfig->addComponent(new DMSGridFieldEditButton(), GridFieldDeleteAction::class);
 
         if ($this->modelClass === 'DMSDocument') {
-            $gridFieldConfig->removeComponentsByType('GridFieldAddNewButton');
+            $gridFieldConfig->removeComponentsByType(GridFieldAddNewButton::class);
             $gridFieldConfig->addComponent(
                 new DMSGridFieldAddNewButton('buttons-before-left'),
-                'GridFieldExportButton'
+                GridFieldExportButton::class
             );
         } elseif ($this->modelClass === 'DMSDocumentSet') {
-            $dataColumns = $gridFieldConfig->getComponentByType('GridFieldDataColumns');
+            $dataColumns = $gridFieldConfig->getComponentByType(GridFieldDataColumns::class);
             $fields = $dataColumns->getDisplayFields($gridField);
             $fields = array('Title' => 'Title', 'Page.Title' => 'Page') + $fields;
             $dataColumns->setDisplayFields($fields)

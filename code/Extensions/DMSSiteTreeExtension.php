@@ -7,6 +7,7 @@ namespace SilverStripeDMS\Extensions;
 
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataExtension;
@@ -47,7 +48,7 @@ class DMSSiteTreeExtension extends DataExtension
         $gridField->addExtraClass('documentsets');
 
         // Only show document sets in the autocompleter that have not been assigned to a page already
-        $config->getComponentByType('GridFieldAddExistingAutocompleter')->setSearchList(
+        $config->getComponentByType(GridFieldAddExistingAutocompleter::class)->setSearchList(
             DMSDocumentSet::get()->filter(array('PageID' => 0))
         );
 
