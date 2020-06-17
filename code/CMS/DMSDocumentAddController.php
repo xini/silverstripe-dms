@@ -6,7 +6,24 @@
 namespace SilverStripeDMS\CMS;
 
 use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\CMS\Controllers\CMSPageEditController;
 use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Control\Controller;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\Tab;
+use SilverStripe\Forms\TabSet;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
+use SilverStripe\View\ArrayData;
+use SilverStripe\View\Requirements;
+use SilverStripeDMS\Model\DMSDocument;
 use SilverStripeDMS\Model\DMSDocumentSet;
 
 class DMSDocumentAddController extends LeftAndMain
@@ -159,7 +176,7 @@ class DMSDocumentAddController extends LeftAndMain
         $items = parent::Breadcrumbs($unlinked);
 
         // The root element should explicitly point to the root node.
-        $items[0]->Link = Controller::join_links(singleton('CMSPageEditController')->Link('show'), 0);
+        $items[0]->Link = Controller::join_links(singleton(CMSPageEditController::class)->Link('show'), 0);
 
         // Enforce linkage of hierarchy to AssetAdmin
         foreach ($items as $item) {
@@ -275,7 +292,7 @@ class DMSDocumentAddController extends LeftAndMain
             );
         }
 
-        return Convert::raw2json($return);
+        return json_encode($return);
     }
 
     /**
@@ -338,8 +355,8 @@ class DMSDocumentAddController extends LeftAndMain
      */
     public function canView($member = null)
     {
-        if (!$member || !(is_a($member, 'Member')) || is_numeric($member)) {
-            $member = Member::currentUser();
+        if (!$member || !(is_a($member, Member::class)) || is_numeric($member)) {
+            $member = Security::getCurrentUser();
         }
 
         if ($member &&

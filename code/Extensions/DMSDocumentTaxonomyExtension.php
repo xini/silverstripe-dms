@@ -10,7 +10,7 @@ use SilverStripe\Taxonomy\TaxonomyTerm;
 class DMSDocumentTaxonomyExtension extends DataExtension
 {
     private static $many_many = array(
-        'Tags' => 'TaxonomyTerm'
+        'Tags' => TaxonomyTerm::class
     );
 
     /**

@@ -3,6 +3,7 @@ namespace SilverStripeDMS\CMS;
 
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\TreeDropdownField;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\View\Requirements;
 
 class DMSDocumentAddExistingField extends CompositeField

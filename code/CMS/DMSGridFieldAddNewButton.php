@@ -37,7 +37,7 @@ class DMSGridFieldAddNewButton extends GridFieldAddNewButton implements GridFiel
             $this->buttonName = _t('GridField.Add', 'Add {name}', array('name' => $objectName));
         }
 
-        $link = singleton('DMSDocumentAddController')->Link();
+        $link = singleton(DMSDocumentAddController::class)->Link();
         if ($this->getDocumentSetId()) {
             $link = Controller::join_links($link, '?dsid=' . $this->getDocumentSetId());
 

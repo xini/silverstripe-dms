@@ -27,6 +27,7 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\View\Requirements;
 use SilverStripeDMS\CMS\DMSUploadField_ItemHandler;
+use SilverStripeDMS\DMS;
 use SilverStripeDMS\Model\DMSDocument;
 use SilverStripeDMS\Model\DMSDocumentSet;
 

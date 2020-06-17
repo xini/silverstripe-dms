@@ -20,7 +20,7 @@ use SilverStripeDMS\Model\DMSDocumentSet;
 class DMSSiteTreeExtension extends DataExtension
 {
     private static $has_many = array(
-        'DocumentSets' => 'DMSDocumentSet'
+        'DocumentSets' => DMSDocumentSet::class
     );
 
     public function updateCMSFields(FieldList $fields)

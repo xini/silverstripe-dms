@@ -21,6 +21,7 @@ use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldDetailForm;
+use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use SilverStripe\Forms\GridField\GridFieldPaginator;
 use SilverStripe\Forms\GridField\GridFieldSortableHeader;
@@ -36,6 +37,7 @@ use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use SilverStripeDMS\CMS\DMSGridFieldAddNewButton;
+use SilverStripeDMS\CMS\DMSGridFieldDetailForm_ItemRequest;
 use SilverStripeDMS\CMS\DMSGridFieldEditButton;
 use SilverStripeDMS\DMS;
 use SilverStripeDMS\Forms\DMSJsonField;
@@ -166,7 +168,7 @@ class DMSDocumentSet extends DataObject
                     $fields->fieldByName('Root.Main.PageID')->setTitle(_t('DMSDocumentSet.SHOWONPAGE', 'Show on page'));
                 }
 
-                $gridFieldConfig->getComponentByType('GridFieldDataColumns')
+                $gridFieldConfig->getComponentByType(GridFieldDataColumns::class)
                     ->setDisplayFields($self->getDocumentDisplayFields())
                     ->setFieldCasting(array('LastEdited' => 'Datetime->Ago'))
                     ->setFieldFormatting(
@@ -183,8 +185,8 @@ class DMSDocumentSet extends DataObject
                     );
 
                 // Override delete functionality with this class
-                $gridFieldConfig->getComponentByType('GridFieldDetailForm')
-                    ->setItemRequestClass('DMSGridFieldDetailForm_ItemRequest');
+                $gridFieldConfig->getComponentByType(GridFieldDetailForm::class)
+                    ->setItemRequestClass(DMSGridFieldDetailForm_ItemRequest::class);
                 $gridField = GridField::create(
                     'Documents',
                     false,
@@ -196,7 +198,7 @@ class DMSDocumentSet extends DataObject
 
                 $gridFieldConfig->addComponent(
                     $addNewButton = new DMSGridFieldAddNewButton('buttons-before-left'),
-                    'GridFieldExportButton'
+                    GridFieldExportButton::class
                 );
                 $addNewButton->setDocumentSetId($self->ID);
 
@@ -320,7 +322,7 @@ class DMSDocumentSet extends DataObject
         $keyValuesPair = json_decode($this->KeyValuePairs);
 
         /** @var DMSDocument $dmsDoc */
-        $dmsDoc = singleton('DMSDocument');
+        $dmsDoc = singleton(DMSDocument::class);
         $context = $dmsDoc->getDefaultSearchContext();
 
         $sortBy = $this->SortBy ? $this->SortBy : 'LastEdited';
@@ -439,7 +441,7 @@ class DMSDocumentSet extends DataObject
      */
     public function getGlobalPermission(Member $member = null)
     {
-        if (!$member || !(is_a($member, 'Member')) || is_numeric($member)) {
+        if (!$member || !(is_a($member, Member::class)) || is_numeric($member)) {
             $member = Security::getCurrentUser();
         }
 

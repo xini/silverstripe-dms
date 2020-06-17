@@ -17,6 +17,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripeDMS\DMS;
+use SilverStripeDMS\Interfaces\DMSDocumentInterface;
 
 class DMSDocument_versions extends DataObject
 {
@@ -140,7 +141,7 @@ class DMSDocument_versions extends DataObject
     {
         //check what the constructor was passed
         $dmsObject = null;
-        if ($record && is_subclass_of($record, 'DMSDocumentInterface')) {
+        if ($record && is_subclass_of($record, DMSDocumentInterface::class)) {
             $dmsObject = $record;
             $record = null; //cancel the record creation to just create an empty object
         }

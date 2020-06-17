@@ -29,12 +29,11 @@ ShortcodeParser::get('default')->register(
 
 if ($config->get(DMSDocument_versions::class, 'enable_versions')) {
     //using the same db relations for the versioned documents, as for the actual documents
-    $config::modify(DMSDocument_versions::class, 'db',
-        $config->get(DMSDocument::class, 'db'));
+    Config::modify()->set(DMSDocument_versions::class, 'db', $config->get(DMSDocument::class, 'db'));
 }
 
 // add dmsassets folder to file system sync exclusion
 if (strpos($config->get(DMS::class, 'folder_name'), 'assets/') === 0) {
     $folderName = substr($config->get(DMS::class, 'folder_name'), 7);
-    $config->modify(Filesystem::class, 'sync_blacklisted_patterns', array("/^" . $folderName . "$/i",));
+    Config::modify()->set(Filesystem::class, 'sync_blacklisted_patterns', array("/^" . $folderName . "$/i",));
 }

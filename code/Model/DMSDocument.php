@@ -31,6 +31,7 @@ namespace SilverStripeDMS\Model;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
+use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
@@ -43,10 +44,13 @@ use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldDetailForm;
+use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\GridField\GridFieldPaginator;
 use SilverStripe\Forms\GridField\GridFieldSortableHeader;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
@@ -227,7 +231,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
      */
     public function canCreate($member = null, $context = array())
     {
-        if (!$member || !(is_a($member, 'Member')) || is_numeric($member)) {
+        if (!$member || !(is_a($member, Member::class)) || is_numeric($member)) {
             $member = Security::getCurrentUser();
         }
 
@@ -256,7 +260,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
      */
     public function canDelete($member = null)
     {
-        if (!$member || !(is_a($member, 'Member')) || is_numeric($member)) {
+        if (!$member || !(is_a($member, Member::class)) || is_numeric($member)) {
             $member = Security::getCurrentUser();
         }
 
@@ -494,7 +498,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
      */
     public function expireAtDate($datetime, $write = true)
     {
-        $this->ExpireAtDate = DBField::create_field('SS_Datetime', $datetime)->Format('Y-m-d H:i:s');
+        $this->ExpireAtDate = DBField::create_field('DBDatetime', $datetime)->Format('Y-m-d H:i:s');
 
         if ($write) {
             $this->write();
@@ -836,7 +840,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
             new GridFieldDetailForm()
         );
 
-        $gridFieldConfig->getComponentByType('GridFieldDataColumns')
+        $gridFieldConfig->getComponentByType(GridFieldDataColumns::class)
             ->setDisplayFields(array(
                 'Title' => 'Title',
                 'ClassName' => 'Page Type',
@@ -871,8 +875,8 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
                 new GridFieldPaginator(30)
             );
 
-            $versionsGridFieldConfig->getComponentByType('GridFieldDataColumns')
-                ->setDisplayFields(Config::inst()->get('DMSDocument_versions', 'display_fields'))
+            $versionsGridFieldConfig->getComponentByType(GridFieldDataColumns::class)
+                ->setDisplayFields(Config::inst()->get(DMSDocument_versions::class, 'display_fields'))
                 ->setFieldFormatting(
                     array(
                         'FilenameWithoutID' => '<a target=\"_blank\" class=\"file-url\" href=\"$Link\">$FilenameWithoutID</a>'
@@ -978,7 +982,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
             'EditorGroups' => 'hide',
         );
         /** @var SiteTree $siteTree */
-        $siteTree = singleton('SiteTree');
+        $siteTree = singleton(SiteTree::class);
         $settingsFields = $siteTree->getSettingsFields();
 
         foreach ($showFields as $name => $extraCss) {
@@ -1056,7 +1060,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
 
         // make sure default DownloadBehavior is respected when initially writing document
         // in case the default in the enum is different than what's set in an outside config
-        $defaultDownloadBehaviour = Config::inst()->get('DMSDocument', 'default_download_behaviour');
+        $defaultDownloadBehaviour = Config::inst()->get(DMSDocument::class, 'default_download_behaviour');
         if ($this->DownloadBehavior == null && !empty($defaultDownloadBehaviour)) {
             $possibleBehaviors = $this->dbObject('DownloadBehavior')
                 ->enumValues();
@@ -1275,12 +1279,12 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
         );
 
         $gridFieldConfig = $gridField->getConfig();
-        $gridFieldConfig->removeComponentsByType('GridFieldEditButton');
-        $gridFieldConfig->addComponent(new DMSGridFieldEditButton(), 'GridFieldDeleteAction');
+        $gridFieldConfig->removeComponentsByType(GridFieldEditButton::class);
+        $gridFieldConfig->addComponent(new DMSGridFieldEditButton(), GridFieldDeleteAction::class);
 
-        $gridField->getConfig()->removeComponentsByType('GridFieldAddNewButton');
+        $gridField->getConfig()->removeComponentsByType(GridFieldAddNewButton::class);
         // Move the autocompleter to the left
-        $gridField->getConfig()->removeComponentsByType('GridFieldAddExistingAutocompleter');
+        $gridField->getConfig()->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
         $gridField->getConfig()->addComponent(
             $addExisting = new GridFieldAddExistingAutocompleter('buttons-before-left')
         );
