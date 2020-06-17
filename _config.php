@@ -6,6 +6,7 @@ use SilverStripeDMS\Model\DMSDocument;
 use SilverStripeDMS\Model\DMSDocument_versions;
 use SilverStripeDMS\DMS;
 use SilverStripe\Assets\Filesystem;
+use SilverStripeDMS\DMSShortcodeHandler;
 
 $config = Config::inst();
 
@@ -23,7 +24,7 @@ CMSMenu::remove_menu_item('DMSDocumentAddController');
 
 ShortcodeParser::get('default')->register(
     $config->get(DMS::class, 'shortcode_handler_key'),
-    array('DMSShortcodeHandler', 'handle')
+    array(DMSShortcodeHandler::class, 'handle')
 );
 
 if ($config->get(DMSDocument_versions::class, 'enable_versions')) {

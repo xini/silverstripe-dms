@@ -21,6 +21,8 @@ use SilverStripeDMS\DMS;
 class DMSDocument_versions extends DataObject
 {
 
+    private static $table_name = 'DMSDocument_versions';
+
     /**
      * @var bool $enable_versions Flag that turns on or off versions of
      * documents when replacing them

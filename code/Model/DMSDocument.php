@@ -76,6 +76,8 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 
 class DMSDocument extends DataObject implements DMSDocumentInterface
 {
+    private static $table_name = 'DMSDocument';
+
     private static $db = [
         "Filename" => "Varchar(255)", // eg. 3469~2011-energysaving-report.pdf
         "Folder" => "Varchar(255)",    // eg.	0

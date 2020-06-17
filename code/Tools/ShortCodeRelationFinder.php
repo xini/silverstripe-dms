@@ -11,6 +11,7 @@
  */
 namespace SilverStripeDMS\Tools;
 
+use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
@@ -52,13 +53,13 @@ class ShortCodeRelationFinder
     public function getList($number)
     {
         $number = (int) $number;
-        $list = DataList::create('SiteTree');
+        $list = DataList::create(SiteTree::class);
         $where = array();
-        $fields = $this->getShortCodeFields('SiteTree');
+        $fields = $this->getShortCodeFields(SiteTree::class);
         $shortcode = DMS::inst()->getShortcodeHandlerKey();
         foreach ($fields as $ancClass => $ancFields) {
             foreach ($ancFields as $ancFieldName => $ancFieldSpec) {
-                if ($ancClass != "SiteTree") {
+                if ($ancClass != SiteTree::class) {
                     $list = $list->leftJoin($ancClass, '"'.$ancClass.'"."ID" = "SiteTree"."ID"');
                 }
                 $where[] = "\"$ancClass\".\"$ancFieldName\" LIKE '%[{$shortcode},id=$number]%'"; //."%s" LIKE ""',

@@ -8,6 +8,7 @@ use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripeDMS\Exceptions\FileNotFoundException;
 use SilverStripeDMS\Interfaces\DMSInterface;
+use SilverStripeDMS\Model\DMSDocument;
 
 class DMS implements DMSInterface
 {

@@ -15,6 +15,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldButtonRow;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
@@ -34,6 +35,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
+use SilverStripeDMS\CMS\DMSGridFieldAddNewButton;
 use SilverStripeDMS\CMS\DMSGridFieldEditButton;
 use SilverStripeDMS\DMS;
 use SilverStripeDMS\Forms\DMSJsonField;
@@ -41,6 +43,8 @@ use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 
 class DMSDocumentSet extends DataObject
 {
+    private static $table_name = 'DMSDocumentSet';
+
     private static $db = [
         'Title' => 'Varchar(255)',
         'KeyValuePairs' => 'Text',
