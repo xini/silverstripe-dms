@@ -797,7 +797,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
 
         $coverImageField = UploadField::create('CoverImage', _t('DMSDocument.COVERIMAGE', 'Cover Image'));
         $coverImageField->getValidator()->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'gif'));
-        $coverImageField->setConfig('allowedMaxFileNumber', 1);
+        $coverImageField->setAllowedMaxFileNumber(1);
         $fields->add($coverImageField);
 
 
@@ -827,8 +827,8 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
 
         //create upload field to replace document
         $uploadField = new DMSUploadField('ReplaceFile', 'Replace file');
-        $uploadField->setConfig('allowedMaxFileNumber', 1);
-        $uploadField->setConfig('downloadTemplateName', 'ss-dmsuploadfield-downloadtemplate');
+        $uploadField->setAllowedMaxFileNumber(1);
+        $uploadField->setTemplate('ss-dmsuploadfield-downloadtemplate');
         $uploadField->setRecord($this);
 
         $gridFieldConfig = GridFieldConfig::create()->addComponents(
@@ -913,9 +913,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
         );
         $embargoDatetime = DatetimeField::create('EmbargoedUntilDate', '');
         $embargoDatetime->getDateField()
-            ->setConfig('showcalendar', true)
-            ->setConfig('dateformat', 'dd-MM-yyyy')
-            ->setConfig('datavalueformat', 'dd-MM-yyyy');
+            ->setDatetimeFormat('dateformat', 'dd-MM-yyyy');
 
         $expiryValue = 'None';
         if (!empty($this->ExpireAtDate)) {
@@ -932,9 +930,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
         );
         $expiryDatetime = DatetimeField::create('ExpireAtDate', '');
         $expiryDatetime->getDateField()
-            ->setConfig('showcalendar', true)
-            ->setConfig('dateformat', 'dd-MM-yyyy')
-            ->setConfig('datavalueformat', 'dd-MM-yyyy');
+            ->setDatetimeFormat('dateformat', 'dd-MM-yyyy');
 
         // This adds all the actions details into a group.
         // Embargo, History, etc to go in here
