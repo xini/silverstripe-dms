@@ -17,6 +17,7 @@ namespace SilverStripeDMS\CMS;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
@@ -122,11 +123,11 @@ class DMSUploadField extends UploadField
         if (!$return['error'] && $this->relationAutoSetting && $record && $record->exists()) {
             $tooManyFiles = false;
             // Some relationships allow many files to be attached.
-            if ($this->getConfig('allowedMaxFileNumber') && ($record->hasMany($name) || $record->manyMany($name))) {
+            if ($this->getAllowedMaxFileSize() && ($record->hasMany($name) || $record->manyMany($name))) {
                 if (!$record->isInDB()) {
                     $record->write();
                 }
-                $tooManyFiles = $record->{$name}()->count() >= $this->getConfig('allowedMaxFileNumber');
+                $tooManyFiles = $record->{$name}()->count() >= $this->getAllowedMaxFileSize();
             // has_one only allows one file at any given time.
             } elseif ($record->hasOne($name)) {
                 $tooManyFiles = $record->{$name}() && $record->{$name}()->exists();
@@ -134,13 +135,13 @@ class DMSUploadField extends UploadField
 
             // Report the constraint violation.
             if ($tooManyFiles) {
-                if (!$this->getConfig('allowedMaxFileNumber')) {
-                    $this->setConfig('allowedMaxFileNumber', 1);
+                if (!$this->getAllowedMaxFileSize()) {
+                    $this->setAllowedMaxFileNumber(1);
                 }
                 $return['error'] = _t(
                     'UploadField.MAXNUMBEROFFILES',
                     'Max number of {count} file(s) exceeded.',
-                    array('count' => $this->getConfig('allowedMaxFileNumber'))
+                    array('count' => $this->getAllowedMaxFileSize())
                 );
             }
         }
