@@ -11,6 +11,8 @@ use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\HiddenField;
@@ -85,7 +87,7 @@ class DMSDocumentAddController extends LeftAndMain
         if ($id = $this->getRequest()->getVar('dsid')) {
             return DMSDocumentSet::get()->byId($id);
         }
-        return singleton(DMSDocumentSet::class);
+        return Injectable::singleton(DMSDocumentSet::class);
     }
 
     /**
@@ -94,8 +96,8 @@ class DMSDocumentAddController extends LeftAndMain
      */
     public function getEditForm($id = null, $fields = null)
     {
-        Requirements::javascript(FRAMEWORK_DIR . '/javascript/AssetUploadField.js');
-        Requirements::css(FRAMEWORK_DIR . '/css/AssetUploadField.css');
+//        Requirements::javascript(FRAMEWORK_DIR . '/javascript/AssetUploadField.js');
+//        Requirements::css(FRAMEWORK_DIR . '/css/AssetUploadField.css');
         Requirements::css(DMS_DIR . '/dist/css/cmsbundle.css');
 
         /** @var SiteTree $page */
