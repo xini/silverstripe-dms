@@ -85,7 +85,7 @@ class DMSDocumentAddController extends LeftAndMain
         if ($id = $this->getRequest()->getVar('dsid')) {
             return DMSDocumentSet::get()->byId($id);
         }
-        return singleton('DMSDocumentSet');
+        return singleton(DMSDocumentSet::class);
     }
 
     /**
