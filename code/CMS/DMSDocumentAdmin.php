@@ -2,6 +2,7 @@
 namespace SilverStripeDMS\CMS;
 
 use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Forms\GridField\GridField;
@@ -10,12 +11,14 @@ use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\View\Requirements;
+use SilverStripeDMS\Model\DMSDocument;
+use SilverStripeDMS\Model\DMSDocumentSet;
 
 class DMSDocumentAdmin extends ModelAdmin
 {
     private static $managed_models = array(
-        'DMSDocument',
-        'DMSDocumentSet'
+        DMSDocument::class,
+        DMSDocumentSet::class
     );
 
     private static $url_segment = 'documents';
@@ -32,11 +35,11 @@ class DMSDocumentAdmin extends ModelAdmin
     /**
      * Remove the default "add" button and replace it with a customised version for DMS
      *
-     * @return CMSForm
+     * @return Form
      */
     public function getEditForm($id = null, $fields = null)
     {
-        /** @var CMSForm $form */
+        /** @var Form $form */
         $form = parent::getEditForm($id, $fields);
         $gridField = $form->Fields()->fieldByName($this->sanitiseClassName($this->modelClass));
         return $this->modifyGridField($form, $gridField);
@@ -47,11 +50,11 @@ class DMSDocumentAdmin extends ModelAdmin
      * update the display fields to include some extra columns that are only for this ModelAdmin, so cannot
      * be added directly to the model's display fields.
      *
-     * @param  CMSForm   $form
+     * @param  Form   $form
      * @param  GridField $gridField
-     * @return CMSForm
+     * @return Form
      */
-    protected function modifyGridField(CMSForm $form, GridField $gridField)
+    protected function modifyGridField(Form $form, GridField $gridField)
     {
         $gridFieldConfig = $gridField->getConfig();
 
