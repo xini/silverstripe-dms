@@ -4,6 +4,7 @@ namespace SilverStripeDMS\CMS;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\GridField\GridField_ColumnProvider;
 use SilverStripe\Forms\GridField\GridFieldEditButton;
+use SilverStripe\Forms\GridField\GridFieldViewButton;
 use SilverStripe\View\ArrayData;
 
 class DMSGridFieldEditButton extends GridFieldEditButton implements GridField_ColumnProvider
@@ -25,7 +26,7 @@ class DMSGridFieldEditButton extends GridFieldEditButton implements GridField_Co
             'Link' => Controller::join_links($gridField->Link('item'), $record->ID, 'edit')
         ));
 
-        $template = $record->canEdit() ? 'GridFieldEditButton' : 'GridFieldViewButton';
+        $template = $record->canEdit() ? GridFieldEditButton::class : GridFieldViewButton::class;
 
         return $data->renderWith($template);
     }

@@ -193,7 +193,7 @@ class DMSDocumentSet extends DataObject
                     $self->Documents(),
                     $gridFieldConfig
                 );
-                $gridField->setModelClass('DMSDocument');
+                $gridField->setModelClass(DMSDocument::class);
                 $gridField->addExtraClass('documents');
 
                 $gridFieldConfig->addComponent(
@@ -243,7 +243,7 @@ class DMSDocumentSet extends DataObject
     public function addQueryFields($fields)
     {
         /** @var DMSDocument $doc */
-        $doc = singleton('DMSDocument');
+        $doc = singleton(DMSDocument::class);
         /** @var FormField $field */
         $dmsDocFields = $doc->scaffoldSearchFields(array('fieldClasses' => true));
         $membersMap = Member::get()->map('ID', 'Name')->toArray();
