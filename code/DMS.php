@@ -22,7 +22,7 @@ class DMS implements DMSInterface
      * @config
      * @var string
      */
-    private static $folder_name = 'assets/_dmsassets';
+    private static $folder_name = 'public/assets/_dmsassets';
 
     /**
      * How many documents to store in a single folder. The square of this number is the maximum number of documents.
