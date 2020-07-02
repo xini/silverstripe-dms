@@ -13,8 +13,10 @@ namespace SilverStripeDMS\Tools;
 
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObjectSchema;
 use SilverStripeDMS\DMS;
 
 class ShortCodeRelationFinder
@@ -58,11 +60,14 @@ class ShortCodeRelationFinder
         $fields = $this->getShortCodeFields(SiteTree::class);
         $shortcode = DMS::inst()->getShortcodeHandlerKey();
         foreach ($fields as $ancClass => $ancFields) {
+            $schema = Injector::inst()->get(DataObjectSchema::class);
+            $table = $schema->tableName($ancClass);
+
             foreach ($ancFields as $ancFieldName => $ancFieldSpec) {
                 if ($ancClass != SiteTree::class) {
-                    $list = $list->leftJoin($ancClass, '"'.$ancClass.'"."ID" = "SiteTree"."ID"');
+                    $list = $list->leftJoin($table, '"'.$table.'"."ID" = "SiteTree"."ID"');
                 }
-                $where[] = "\"$ancClass\".\"$ancFieldName\" LIKE '%[{$shortcode},id=$number]%'"; //."%s" LIKE ""',
+                $where[] = "\"$table\".\"$ancFieldName\" LIKE '%[{$shortcode},id=$number]%'"; //."%s" LIKE ""',
             }
         }
 
