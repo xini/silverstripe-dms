@@ -6,6 +6,7 @@
 namespace SilverStripeDMS\CMS;
 
 use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\Assets\File;
 use SilverStripe\CMS\Controllers\CMSPageEditController;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
@@ -187,7 +188,7 @@ class DMSDocumentAddController extends LeftAndMain
         foreach ($items as $item) {
             $baselink = $this->Link('show');
             if (strpos($item->Link, $baselink) !== false) {
-                $item->Link = str_replace($baselink, singleton('CMSPageEditController')->Link('show'), $item->Link);
+                $item->Link = str_replace($baselink, singleton(CMSPageEditController::class)->Link('show'), $item->Link);
             }
         }
 
@@ -264,7 +265,7 @@ class DMSDocumentAddController extends LeftAndMain
             );
         }
 
-        return Convert::raw2json($return);
+        return json_encode($return);
     }
 
     /**
@@ -346,7 +347,7 @@ class DMSDocumentAddController extends LeftAndMain
     {
         return array_filter(
             array_merge(
-                (array) Config::inst()->get('File', 'allowed_extensions'),
+                (array) Config::inst()->get(File::class, 'allowed_extensions'),
                 (array) $this->config()->get('allowed_extensions')
             )
         );

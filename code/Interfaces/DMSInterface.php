@@ -12,6 +12,7 @@
 namespace SilverStripeDMS\Interfaces;
 
 use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\ORM\ArrayList;
 
 interface DMSInterface
 {

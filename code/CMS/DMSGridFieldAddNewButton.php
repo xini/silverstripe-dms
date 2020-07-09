@@ -3,6 +3,7 @@ namespace SilverStripeDMS\CMS;
 
 use SilverStripe\CMS\Controllers\CMSPageEditController;
 use SilverStripe\Control\Controller;
+use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridField_HTMLProvider;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\View\ArrayData;

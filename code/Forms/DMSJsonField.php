@@ -8,6 +8,7 @@ namespace SilverStripeDMS\Forms;
 use SilverStripe\Core\Convert;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FormField;
 
 class DMSJsonField extends CompositeField
 {

@@ -25,7 +25,8 @@
         "expose": [
             "dist",
             "javascript",
-            "css"
+            "css",
+            "images"
         ]
     }
 }

@@ -1,11 +1,13 @@
 <?php
 namespace SilverStripeDMS;
 
+use SilverStripe\Assets\File;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\ORM\ArrayList;
 use SilverStripeDMS\Exceptions\FileNotFoundException;
 use SilverStripeDMS\Interfaces\DMSInterface;
 use SilverStripeDMS\Model\DMSDocument;

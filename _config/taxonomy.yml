@@ -3,13 +3,13 @@ Name: dmstaxonomy
 Only:
   moduleexists: taxonomy
 ---
-TaxonomyType:
+SilverStripe\Taxonomy\TaxonomyType:
   extensions:
-    - DMSTaxonomyTypeExtension
+    - SilverStripeDMS\Extensions\DMSTaxonomyTypeExtension
 
-DMSDocument:
+SilverStripeDMS\Model\DMSDocument:
   extensions:
-    - DMSDocumentTaxonomyExtension
+    - SilverStripeDMS\Extensions\DMSDocumentTaxonomyExtension
   # Add query builder filter for tags
   searchable_fields:
     Tags.ID:
@@ -17,7 +17,7 @@ DMSDocument:
       field: ListboxField
       filter: ExactMatchFilter
 
-DMSTaxonomyTypeExtension:
+SilverStripeDMS\Extensions\DMSTaxonomyTypeExtension:
   # Referenced to filter taxonomy terms for DMS Documents.
   # To change, update the default_records array too.
   default_record_name: Document

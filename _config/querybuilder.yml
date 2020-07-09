@@ -1,4 +1,4 @@
-DMSDocument:
+SilverStripeDMS\Model\DMSDocument:
   searchable_fields:
     Title:
       title: Document title matches

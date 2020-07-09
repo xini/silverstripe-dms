@@ -61,13 +61,13 @@ class DMSDocumentAdmin extends ModelAdmin
         $gridFieldConfig->removeComponentsByType(GridFieldEditButton::class);
         $gridFieldConfig->addComponent(new DMSGridFieldEditButton(), GridFieldDeleteAction::class);
 
-        if ($this->modelClass === 'DMSDocument') {
+        if ($this->modelClass === DMSDocument::class) {
             $gridFieldConfig->removeComponentsByType(GridFieldAddNewButton::class);
             $gridFieldConfig->addComponent(
                 new DMSGridFieldAddNewButton('buttons-before-left'),
                 GridFieldExportButton::class
             );
-        } elseif ($this->modelClass === 'DMSDocumentSet') {
+        } elseif ($this->modelClass === DMSDocumentSet::class) {
             $dataColumns = $gridFieldConfig->getComponentByType(GridFieldDataColumns::class);
             $fields = $dataColumns->getDisplayFields($gridField);
             $fields = array('Title' => 'Title', 'Page.Title' => 'Page') + $fields;

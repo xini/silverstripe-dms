@@ -42,6 +42,7 @@ use SilverStripe\Forms\DatetimeField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
@@ -60,10 +61,12 @@ use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
@@ -196,7 +199,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
 
     public function canEdit($member = null)
     {
-        if (!$member || !(is_a($member, 'Member')) || is_numeric($member)) {
+        if (!$member || !(is_a($member, Member::class)) || is_numeric($member)) {
             $member = Security::getCurrentUser();
         }
 
@@ -805,7 +808,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
             'open' => _t('DMSDocument.OPENINBROWSER', 'Open in browser'),
             'download' => _t('DMSDocument.FORCEDOWNLOAD', 'Force download'),
         );
-        $defaultDownloadBehaviour = Config::inst()->get('DMSDocument', 'default_download_behaviour');
+        $defaultDownloadBehaviour = Config::inst()->get(DMSDocument::class, 'default_download_behaviour');
         if (!isset($downloadBehaviorSource[$defaultDownloadBehaviour])) {
             user_error('Default download behaviour "' . $defaultDownloadBehaviour . '" not supported.', E_USER_WARNING);
         } else {

@@ -6,6 +6,8 @@
  */
 namespace SilverStripeDMS\Interfaces;
 
+use SilverStripe\ORM\DataList;
+
 interface DMSDocumentInterface
 {
     /**
