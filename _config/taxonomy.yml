@@ -14,7 +14,7 @@ SilverStripeDMS\Model\DMSDocument:
   searchable_fields:
     Tags.ID:
       title: Document has tags
-      field: ListboxField
+      field: SilverStripe\Forms\ListboxField
       filter: ExactMatchFilter
 
 SilverStripeDMS\Extensions\DMSTaxonomyTypeExtension:
