@@ -157,7 +157,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
 
     public function canView($member = null)
     {
-        if (!$member || !(is_a($member, 'Member')) || is_numeric($member)) {
+        if (!$member || !(is_a($member, Member::class)) || is_numeric($member)) {
             $member = Security::getCurrentUser();
         }
 
@@ -1322,7 +1322,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
         $valid = parent::validate();
 
         if ($this->CanViewType == 'OnlyTheseUsers' && !$this->ViewerGroups()->count()) {
-            $valid->error(
+            $valid->addError(
                 _t(
                     'DMSDocument.VALIDATIONERROR_NOVIEWERSELECTED',
                     "Selecting 'Only these people' from a viewers list needs at least one group selected."
@@ -1331,7 +1331,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
         }
 
         if ($this->CanEditType == 'OnlyTheseUsers' && !$this->EditorGroups()->count()) {
-            $valid->error(
+            $valid->addError(
                 _t(
                     'DMSDocument.VALIDATIONERROR_NOEDITORSELECTED',
                     "Selecting 'Only these people' from a editors list needs at least one group selected."
