@@ -254,7 +254,7 @@ class DMSDocumentSet extends DataObject
         foreach ($dmsDocFields as $field) {
             if ($field instanceof ListboxField) {
                 $map = ($field->getName() === 'Tags__ID') ? $doc->getAllTagsMap() : $membersMap;
-                $field->setMultiple(true)->setSource($map);
+                $field->setSource($map);
 
                 if ($field->getName() === 'Tags__ID') {
                     $field->setRightTitle(
