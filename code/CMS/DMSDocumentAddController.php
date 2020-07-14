@@ -200,6 +200,11 @@ class DMSDocumentAddController extends LeftAndMain
         return $items;
     }
 
+    protected function sanitiseClassName($class)
+    {
+        return str_replace('\\', '-', $class);
+    }
+
     /**
      * Returns the link to be used to return the user after uploading a document. Scenarios:
      *
@@ -217,8 +222,8 @@ class DMSDocumentAddController extends LeftAndMain
 
             if ($this->getRequest()->getVar('dsid')) {
                 return Controller::join_links(
-                    $modelAdmin->Link('DMSDocumentSet'),
-                    'EditForm/field/DMSDocumentSet/item',
+                    $modelAdmin->Link($this->sanitiseClassName(DMSDocumentSet::class)),
+                    'EditForm/field/'.$this->sanitiseClassName(DMSDocumentSet::class).'/item',
                     (int) $this->getRequest()->getVar('dsid'),
                     'edit'
                 );
