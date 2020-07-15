@@ -31,6 +31,7 @@ namespace SilverStripeDMS\Model;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
+use SilverStripe\CMS\Controllers\CMSPageEditController;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -852,7 +853,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
             ->setFieldFormatting(array(
                 'Title' => sprintf(
                     '<a class=\"cms-panel-link\" href=\"%s/$ID\">$Title</a>',
-                    singleton('CMSPageEditController')->Link('show')
+                    singleton(CMSPageEditController::class)->Link('show')
                 )
             ));
 
@@ -1050,7 +1051,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
         }
 
         // Set user fields
-        if ($currentUserID = Security::getCurrentUser()) {
+        if ($currentUserID = Security::getCurrentUser()->ID) {
             if (!$this->CreatedByID) {
                 $this->CreatedByID = $currentUserID;
             }
@@ -1061,8 +1062,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
         // in case the default in the enum is different than what's set in an outside config
         $defaultDownloadBehaviour = Config::inst()->get(DMSDocument::class, 'default_download_behaviour');
         if ($this->DownloadBehavior == null && !empty($defaultDownloadBehaviour)) {
-            $possibleBehaviors = $this->dbObject('DownloadBehavior')
-                ->enumValues();
+            $possibleBehaviors = $this->dbObject('DownloadBehavior')->enumValues();
 
             if (array_key_exists($defaultDownloadBehaviour, $possibleBehaviors)) {
                 $behavior = $possibleBehaviors[$defaultDownloadBehaviour];
