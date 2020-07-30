@@ -916,8 +916,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
             $embargoValue
         );
         $embargoDatetime = DatetimeField::create('EmbargoedUntilDate', '');
-        $embargoDatetime->getDateField()
-            ->setDatetimeFormat('dateformat', 'dd-MM-yyyy');
+        $embargoDatetime->setDatetimeFormat( 'dd-MM-yyyy');
 
         $expiryValue = 'None';
         if (!empty($this->ExpireAtDate)) {
@@ -933,8 +932,7 @@ class DMSDocument extends DataObject implements DMSDocumentInterface
             $expiryValue
         );
         $expiryDatetime = DatetimeField::create('ExpireAtDate', '');
-        $expiryDatetime->getDateField()
-            ->setDatetimeFormat('dateformat', 'dd-MM-yyyy');
+        $expiryDatetime->setDatetimeFormat('dd-MM-yyyy');
 
         // This adds all the actions details into a group.
         // Embargo, History, etc to go in here
