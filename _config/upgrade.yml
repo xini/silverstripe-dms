@@ -1,0 +1,5 @@
+SilverStripe\ORM\DatabaseAdmin:
+  classname_value_remapping:
+    DMSDocument_versions: SilverStripeDMS\Model\DMSDocument_versions
+    DMSDocument: SilverStripeDMS\Model\DMSDocument
+    DMSDocumentSet: SilverStripeDMS\Model\DMSDocumentSet
