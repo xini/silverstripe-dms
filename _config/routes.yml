@@ -1,0 +1,9 @@
+---
+Name: dmsdocument
+After:
+  - '#coreroutes'
+---
+SilverStripe\Control\Director:
+  rules:
+    'dmsdocument/$ID!': Innoweb\DMS\Controller\LegacyDMSDocumentController
+    'dms/$ID!/$VersionID': Innoweb\DMS\Controller\DMSDocumentController

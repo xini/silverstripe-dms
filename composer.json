@@ -1,5 +1,5 @@
 {
-    "name": "silverstripe/dms",
+    "name": "innoweb/silverstripe-dms",
     "description": "Adds a Document Management System to SilverStripe ",
     "type": "silverstripe-vendormodule",
     "keywords": ["silverstripe", "dms", "document", "document management system"],
@@ -7,27 +7,19 @@
     "authors": [{
         "name": "Julian Seidenberg",
         "email": "julian@silverstripe.com"
-    }],
+    },{
+		"name": "Florian Thoma",
+		"homepage": "https://www.innoweb.com.au"
+	}],
     "require": {
-        "silverstripe/framework": "~4.0",
-        "silverstripe/cms": "~4.0",
+        "silverstripe/cms": "~4.1",
+		"bummzack/sortablefile": "^2.1.3",
         "symbiote/silverstripe-gridfieldextensions": "3.2.2",
-        "silverstripe/taxonomy": "2.0.2",
-        "mustangostang/spyc": "0.6.3"
-    },
-    "suggest": {
-        "undefinedoffset/sortablegridfield": "Allow documents to be reordered via drag-and-drop"
+		"unclecheese/display-logic": "^2.0.0"
     },
     "autoload": {
         "psr-4": {
-            "SilverStripeDMS\\": "code/"
+            "Innoweb\\DMS\\": "src/"
         }
-    },
-    "extra": {
-        "expose": [
-            "dist",
-            "javascript",
-            "images"
-        ]
-    }
+	}	
 }

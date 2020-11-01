@@ -3,14 +3,12 @@ Name: dmsconfig
 ---
 SilverStripe\CMS\Model\SiteTree:
   extensions:
-    - SilverStripeDMS\Extensions\DMSSiteTreeExtension
-  # Whether to show the document sets tab in the CMS for the page type this extension is applied to
+    - Innoweb\DMS\Extensions\DMSSiteTreeExtension
   documents_enabled: true
-
-HtmlEditorField_Toolbar:
+SilverStripe\Assets\File:
   extensions:
-    - SilverStripeDMS\CMS\DocumentHtmlEditorFieldToolbar
-
-# Ensure that if the parent UploadField is overloaded with the injector, that the DMSUploadField is returned
-SilverStripe\Core\Injector\Injector:
-  DMSUploadField: SilverStripeDMS\CMS\DMSUploadField
+    - Innoweb\DMS\Extensions\FileExtension
+SilverStripe\AssetAdmin\Forms\FileFormFactory:
+  extensions:
+    - Innoweb\DMS\Extensions\FormFactoryExtension
+  
