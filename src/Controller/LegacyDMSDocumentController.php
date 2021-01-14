@@ -2,13 +2,14 @@
 
 namespace Innoweb\DMS\Controller;
 
+use SilverStripe\Assets\File;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPStreamResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Security\Permission;
 use SilverStripe\Versioned\Versioned;
-use InvalidArgumentException;
+use Exception;
 
 /**
  * Serves legacy DMS links to /dmsdocument/[ID or version string].
@@ -82,7 +83,7 @@ class LegacyDMSDocumentController extends Controller
         } else {
             // Normal document
             $id = $this->getDocumentIdFromSlug($id);
-            $doc = DMSDocument::get()->filter(['OriginalDMSDocumentIDFile' => $id]);
+            $doc = File::get()->filter(['OriginalDMSDocumentIDFile' => $id])->first();
             $this->extend('updateDocumentFromID', $doc, $request);
         }
 
@@ -94,7 +95,7 @@ class LegacyDMSDocumentController extends Controller
      *
      * @param  string $slug
      * @return int
-     * @throws InvalidArgumentException if an invalid format is provided
+     * @throws Exception if an invalid format is provided
      */
     protected function getDocumentIdFromSlug($slug)
     {
@@ -103,13 +104,13 @@ class LegacyDMSDocumentController extends Controller
         if (is_numeric($id)) {
             return (int) $id;
         }
-        throw new InvalidArgumentException($slug . ' is not a valid DMSDocument URL');
+        throw new Exception($slug . ' is not a valid DMSDocument URL');
     }
 
     /**
      * @param DMSDocument $file DMS Document
      */
-    protected function sendFile(DMSDocument $file)
+    protected function sendFile(File $file)
     {
         $response = HTTPStreamResponse::create($file->getStream(), $file->getAbsoluteSize());
         $response->addHeader('Content-Type', $file->getMimeType());
