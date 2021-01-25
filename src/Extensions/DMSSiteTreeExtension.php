@@ -75,7 +75,7 @@ class DMSSiteTreeExtension extends DataExtension
     {
         $result = ArrayList::create();
         foreach ($this->owner->DocumentSets() as $documentSet) {
-            if ($documentSet->Documents()->count() > 0) {
+            if ($documentSet->getSortedDocuments()->count() > 0) {
                 $result->push($documentSet);
             }
         }

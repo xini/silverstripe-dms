@@ -148,9 +148,13 @@ class DMSDocumentSet extends DataObject
      */
     public function getSortedDocuments()
     {
-        $documents = $this->Documents()->sort([
-            ($this->SortBy == 'Manual' ? "DocumentSort" : $this->SortBy) => ($this->SortBy == 'Manual' ? "ASC" : $this->SortByDirection)
-        ]);
+        $documents = $this->Documents()
+            ->filterByCallback(function($item, $list) {
+                return ($item->canView());
+            })
+            ->sort([
+                ($this->SortBy == 'Manual' ? "DocumentSort" : $this->SortBy) => ($this->SortBy == 'Manual' ? "ASC" : $this->SortByDirection)
+            ]);
         $this->extend('updateSortedDocuments', $documents);
         return $documents;
     }

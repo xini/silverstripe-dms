@@ -23,7 +23,7 @@ class FileExtension extends DataExtension
 
     public function DMSDownloadLink()
     {
-        if ($this->owner->exists()) {
+        if ($this->owner->exists() && $this->owner->canView()) {
             return Controller::join_links('dms', $this->owner->ID . '-' . $this->owner->Name);
         }
         return null;
