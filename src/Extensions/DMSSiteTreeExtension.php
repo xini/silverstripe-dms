@@ -75,7 +75,7 @@ class DMSSiteTreeExtension extends DataExtension
     {
         $result = ArrayList::create();
         foreach ($this->owner->DocumentSets() as $documentSet) {
-            if ($documentSet->getSortedDocuments()->count() > 0) {
+            if ($documentSet->getFilteredDocuments()->count() > 0) {
                 $result->push($documentSet);
             }
         }
@@ -94,7 +94,7 @@ class DMSSiteTreeExtension extends DataExtension
 
         foreach ($this->owner->getFilteredDocumentSets() as $documentSet) {
             /** @var DocumentSet $documentSet */
-            $documents->merge($documentSet->getSortedDocuments());
+            $documents->merge($documentSet->getFilteredDocuments());
         }
         $documents->removeDuplicates();
 

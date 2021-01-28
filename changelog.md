@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.4]
+
+* fix document accessors
+* fix default values for document sets
+* fix CMS fields for newly created document sets
+
 ## [3.0.3]
 
 * fix viewing permissions of documents

@@ -65,6 +65,11 @@ class DMSDocumentSet extends DataObject
         'SortByDirection' => 'Sort Direction',
     ];
 
+    private static $defaults = [
+        'SortBy' => 'LastEdited',
+        'SortByDirection' => 'DESC',
+    ];
+
     private static $default_sort = "Sort ASC";
 
     private static $dms_document_folder = 'dms-documents';
@@ -108,26 +113,32 @@ class DMSDocumentSet extends DataObject
         $info->hideIf('SortBy')->isEqualTo($this->SortBy);
 
         // add upload field
-        if ($this->SortBy == 'Manual') {
-            $uploadField = SortableUploadField::create(
-                'Documents',
-                _t(__CLASS__ . '.Documents', 'Documents'),
-                $this->getSortedDocuments()
+        if ($this->isInDB()) {
+            if ($this->SortBy == 'Manual') {
+                $uploadField = SortableUploadField::create(
+                    'Documents',
+                    _t(__CLASS__ . '.Documents', 'Documents'),
+                    $this->getSortedDocuments()
+                );
+            } else {
+                $uploadField = UploadField::create(
+                    'Documents',
+                    _t(__CLASS__ . '.Documents', 'Documents'),
+                    $this->getSortedDocuments()
+                );
+            }
+            $fields->addFieldToTab(
+                'Root.Documents',
+                $uploadField
+                    ->setFolderName(static::$dms_document_folder)
+                    ->setAllowedFileCategories('document')
             );
         } else {
-            $uploadField = UploadField::create(
-                'Documents',
-                _t(__CLASS__ . '.Documents', 'Documents'),
-                $this->getSortedDocuments()
+            $fields->addFieldToTab(
+                'Root.Documents',
+                LiteralField::create('DocumentsInfo', '<p class="alert alert-info">Please save this Document Set to add Documents.</p>')
             );
         }
-        $fields->addFieldToTab(
-            'Root.Documents',
-            $uploadField
-                ->setFolderName(static::$dms_document_folder)
-                ->setAllowedFileCategories('document')
-        );
-
         // add doc count to tab title
         $fields
             ->findOrMakeTab('Root.Documents')
@@ -142,11 +153,25 @@ class DMSDocumentSet extends DataObject
 
 
     /**
-     * Retrieve sorted documents in this set. An extension hook is provided before the result is returned.
+     * Retrieve sorted documents in this set.
      *
      * @return DataList|null
      */
-    public function getSortedDocuments()
+    private function getSortedDocuments()
+    {
+        $documents = $this->Documents()
+            ->sort([
+                ($this->SortBy == 'Manual' ? "DocumentSort" : $this->SortBy) => ($this->SortBy == 'Manual' ? "ASC" : $this->SortByDirection)
+            ]);
+        return $documents;
+    }
+
+    /**
+     * Retrieve filtered documents in this set. An extension hook is provided before the result is returned.
+     *
+     * @return DataList|null
+     */
+    public function getFilteredDocuments()
     {
         $documents = $this->Documents()
             ->filterByCallback(function($item, $list) {
@@ -155,7 +180,7 @@ class DMSDocumentSet extends DataObject
             ->sort([
                 ($this->SortBy == 'Manual' ? "DocumentSort" : $this->SortBy) => ($this->SortBy == 'Manual' ? "ASC" : $this->SortByDirection)
             ]);
-        $this->extend('updateSortedDocuments', $documents);
+        $this->extend('updateFilteredDocuments', $documents);
         return $documents;
     }
 
