@@ -54,6 +54,10 @@ class DMSDocumentSet extends DataObject
         ],
     ];
 
+    private static $owns = [
+        'Documents',
+    ];
+
     private static $summary_fields = [
         'Title' => 'Title',
         'Documents.Count' => 'No. Documents'
