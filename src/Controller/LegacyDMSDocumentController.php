@@ -83,7 +83,9 @@ class LegacyDMSDocumentController extends Controller
         } else {
             // Normal document
             $id = $this->getDocumentIdFromSlug($id);
-            $doc = File::get()->filter(['OriginalDMSDocumentIDFile' => $id])->first();
+            if ($id) {
+                $doc = File::get()->filter(['OriginalDMSDocumentIDFile' => $id])->first();
+            }
             $this->extend('updateDocumentFromID', $doc, $request);
         }
 
@@ -104,7 +106,7 @@ class LegacyDMSDocumentController extends Controller
         if (is_numeric($id)) {
             return (int) $id;
         }
-        throw new Exception($slug . ' is not a valid DMSDocument URL');
+        return false;
     }
 
     /**

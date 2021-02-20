@@ -103,7 +103,7 @@ class DMSDocumentController extends Controller
         if (is_numeric($id)) {
             return (int) $id;
         }
-        throw new InvalidArgumentException($slug . ' is not a valid DMSDocument URL');
+        return false;
     }
 
     /**
