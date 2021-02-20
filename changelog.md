@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.0]
+
+* add owns to document set to automatically publish all documents
+* fix error handling in download controllers
+
 ## [3.0.4]
 
 * fix document accessors
