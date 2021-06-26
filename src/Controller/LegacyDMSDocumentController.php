@@ -122,6 +122,7 @@ class LegacyDMSDocumentController extends Controller
         $response->addHeader('Expires', '0');
         $response->addHeader('Pragma', 'cache');
         $response->addHeader('Cache-Control', 'private');
+		$this->extend('updateResponse', $response);
         return $response;
     }
 }
