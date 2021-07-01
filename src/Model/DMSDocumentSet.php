@@ -123,7 +123,7 @@ class DMSDocumentSet extends DataObject
                     'Documents',
                     _t(__CLASS__ . '.Documents', 'Documents'),
                     $this->getSortedDocuments()
-                );
+                )->setSortColumn('DocumentSort');
             } else {
                 $uploadField = UploadField::create(
                     'Documents',
