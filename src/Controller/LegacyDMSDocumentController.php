@@ -46,7 +46,7 @@ class LegacyDMSDocumentController extends Controller
         }
         $doc = $this->getDocumentFromID($request);
 
-        if (!empty($doc) && $doc->canView()) {
+        if (!empty($doc) && $doc->exists() && $doc->canView()) {
             if (self::$testMode) {
                 return $doc->Filename;
             }
