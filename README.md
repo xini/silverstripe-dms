@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a very simplified version of the [Silverstripe 3 DMS module](https://github.com/silverstripe/silverstripe-dms) for SS4. 
+This is a very simplified version of the [Silverstripe 3 DMS module](https://github.com/silverstripe/silverstripe-dms) for Silverstripe 4 and 5. 
 
 It uses the standard Silverstripe `File` objects instead fo the custom storage management of the SS3 version. 
 
@@ -17,7 +17,7 @@ Taxonomy has been removed as a dependency. This can be implemented on a project 
 
 ## Requirements
 
-SilverStripe CMS ^4.1, see [composer.json](composer.json)
+SilverStripe CMS ^4.1 or ^5, see [composer.json](composer.json)
 
 ## Installation
 
