@@ -14,8 +14,6 @@
         "symbiote/silverstripe-gridfieldextensions": "^2.0"
     },
     "extra": {
-        "branch-alias": {
-            "dev-master": "1.x-dev"
-        }
+        "installer-name": "dms"
     }
 }
