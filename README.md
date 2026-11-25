@@ -2,9 +2,9 @@
 
 ## Overview
 
-This is a very simplified version of the [Silverstripe 3 DMS module](https://github.com/silverstripe/silverstripe-dms) for Silverstripe 4 and 5. 
+This is a very simplified version of the [Silverstripe 3 DMS module](https://github.com/silverstripe/silverstripe-dms) for Silverstripe 6. 
 
-It uses the standard Silverstripe `File` objects instead fo the custom storage management of the SS3 version. 
+It uses the standard Silverstripe `File` objects instead of the custom storage management of the SS3 version. 
 
 Taxonomy has been removed as a dependency. This can be implemented on a project basis if needed.
 
@@ -17,7 +17,7 @@ Taxonomy has been removed as a dependency. This can be implemented on a project 
 
 ## Requirements
 
-SilverStripe CMS ^4.1 or ^5, see [composer.json](composer.json)
+Silverstripe CMS ^6, see [composer.json](composer.json)
 
 ## Installation
 
@@ -29,19 +29,13 @@ composer require innoweb/silverstripe-dms dev-master
 
 Then run dev/build.
 
-## Upgrading
+## Document versioning
 
-A first `dev/build` will move all old DMS tables to `_obsolete_`. 
-There is an upgrade task `dev/tasks/dms-upgrade` available that will migrate the old documents to the new structures.
-
-## Issues
-
-Document versions are not being migrated over at the moment. The default versioning of files doesn't keep the physical versions of the 
-files. That can be enabled with:
+The default versioning of files doesn't keep the physical versions of the files. That can be enabled with:
 
 ```
 SilverStripe\Assets\File:
   keep_archived_assets: true
 ```
 
-But then this would not only be for DMS documents but for all files. PRs welcome.
+This then applies not only be for DMS documents, but for all files.

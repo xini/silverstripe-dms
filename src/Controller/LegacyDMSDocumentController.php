@@ -2,6 +2,7 @@
 
 namespace Innoweb\DMS\Controller;
 
+use Exception;
 use SilverStripe\Assets\File;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
@@ -9,7 +10,6 @@ use SilverStripe\Control\HTTPStreamResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Security\Permission;
 use SilverStripe\Versioned\Versioned;
-use Exception;
 
 /**
  * Serves legacy DMS links to /dmsdocument/[ID or version string].
@@ -23,11 +23,11 @@ class LegacyDMSDocumentController extends Controller
      */
     protected static $testMode = false;
 
-    private static $allowed_actions = [
+    private static array $allowed_actions = [
         'index'
     ];
 
-    public function init()
+    protected function init()
     {
         Versioned::choose_site_stage($this->request);
         parent::init();
@@ -73,7 +73,7 @@ class LegacyDMSDocumentController extends Controller
         $doc = null;
 
         $id = Convert::raw2sql($request->param('ID'));
-        if (strpos($id, 'version') === 0) {
+        if (str_starts_with($id, 'version')) {
             // Versioned document
             $id = $this->getDocumentIdFromSlug(str_replace('version', '', $id));
 
@@ -99,7 +99,7 @@ class LegacyDMSDocumentController extends Controller
      * @return int
      * @throws Exception if an invalid format is provided
      */
-    protected function getDocumentIdFromSlug($slug)
+    protected function getDocumentIdFromSlug($slug): int|false
     {
         $parts = (array) sscanf($slug, '%d-%s');
         $id = array_shift($parts);
@@ -122,7 +122,7 @@ class LegacyDMSDocumentController extends Controller
         $response->addHeader('Expires', '0');
         $response->addHeader('Pragma', 'cache');
         $response->addHeader('Cache-Control', 'private');
-		$this->extend('updateResponse', $response);
+        $this->extend('updateResponse', $response);
         return $response;
     }
 }

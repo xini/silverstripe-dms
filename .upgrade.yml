@@ -1,4 +1,0 @@
-mappings:
-  DMSSiteTreeExtension: Innoweb\DMS\Extensions\DMSSiteTreeExtension
-  DMSDocumentController: Innoweb\DMS\Controller\DMSDocumentController
-  DMSDocumentSet: Innoweb\DMS\Model\DMSDocumentSet

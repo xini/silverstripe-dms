@@ -6,26 +6,26 @@
 namespace Innoweb\DMS\Extensions;
 
 use Innoweb\DMS\Model\DMSDocumentSet;
+use SilverStripe\Core\Extension;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 
-class DMSSiteTreeExtension extends DataExtension
+class DMSSiteTreeExtension extends Extension
 {
-    private static $has_many = [
+    private static array $has_many = [
         'DocumentSets' => DMSDocumentSet::class
     ];
 
-    public function updateCMSFields(FieldList $fields)
+    public function updateCMSFields(FieldList $fields): void
     {
         // Ability to disable document sets for a Page
-        if (!$this->owner->config()->get('documents_enabled')) {
+        if (!$this->getOwner()->config()->get('documents_enabled')) {
             return;
         }
 
@@ -41,8 +41,8 @@ class DMSSiteTreeExtension extends DataExtension
         $gridField = GridField::create(
             'DocumentSets',
             false,
-            $this->owner->DocumentSets(),
-            $config = new GridFieldConfig_RelationEditor()
+            $this->getOwner()->DocumentSets(),
+            $config = GridFieldConfig_RelationEditor::create()
         );
 
         // sort document sets
@@ -60,9 +60,9 @@ class DMSSiteTreeExtension extends DataExtension
         $fields
             ->findOrMakeTab('Root.DocumentSets')
             ->setTitle(_t(
-                __CLASS__ . '.DocumentSetsTabTitle',
+                self::class . '.DocumentSetsTabTitle',
                 'Document Sets ({count})',
-                ['count' => $this->owner->DocumentSets()->count()]
+                ['count' => $this->getOwner()->DocumentSets()->count()]
             ));
     }
 
@@ -74,12 +74,12 @@ class DMSSiteTreeExtension extends DataExtension
     public function getFilteredDocumentSets()
     {
         $result = ArrayList::create();
-        foreach ($this->owner->DocumentSets() as $documentSet) {
+        foreach ($this->getOwner()->DocumentSets() as $documentSet) {
             if ($documentSet->getFilteredDocuments()->count() > 0) {
                 $result->push($documentSet);
             }
         }
-        $this->owner->extend('updateFilteredDocumentSets', $result);
+        $this->getOwner()->extend('updateFilteredDocumentSets', $result);
         return $result;
     }
 
@@ -92,7 +92,7 @@ class DMSSiteTreeExtension extends DataExtension
     {
         $documents = ArrayList::create();
 
-        foreach ($this->owner->getFilteredDocumentSets() as $documentSet) {
+        foreach ($this->getOwner()->getFilteredDocumentSets() as $documentSet) {
             /** @var DocumentSet $documentSet */
             $documents->merge($documentSet->getFilteredDocuments());
         }

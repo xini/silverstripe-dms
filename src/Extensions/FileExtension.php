@@ -3,28 +3,28 @@
 namespace Innoweb\DMS\Extensions;
 
 use SilverStripe\Control\Controller;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 
-class FileExtension extends DataExtension
+class FileExtension extends Extension
 {
-    private static $db = [
+    private static array $db = [
         "Description" => 'Text',
         'OriginalDMSDocumentIDFile' => 'Int'
     ];
 
-    private static $casting = [
+    private static array $casting = [
         'DescriptionWithLineBreaks' => 'HTMLText'
     ];
 
-    public function getDescriptionWithLineBreaks()
+    public function getDescriptionWithLineBreaks(): string
     {
-        return nl2br($this->owner->Description);
+        return nl2br($this->getOwner()->Description);
     }
 
-    public function DMSDownloadLink()
+    public function DMSDownloadLink(): ?string
     {
-        if ($this->owner->exists() && $this->owner->canView()) {
-            return Controller::join_links('dms', $this->owner->ID . '-' . $this->owner->Name);
+        if ($this->getOwner()->exists() && $this->getOwner()->canView()) {
+            return Controller::join_links('dms', $this->getOwner()->ID . '-' . $this->getOwner()->Name);
         }
         return null;
     }

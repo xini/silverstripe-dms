@@ -8,9 +8,9 @@ use SilverStripe\Assets\File;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\OptionsetField;
-use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use UncleCheese\DisplayLogic\Forms\Wrapper;
 
@@ -24,28 +24,28 @@ use UncleCheese\DisplayLogic\Forms\Wrapper;
 class DMSDocumentSet extends DataObject
 {
 
-    private static $table_name = 'DMSDocumentSet';
+    private static string $table_name = 'DMSDocumentSet';
 
-    private static $singular_name = 'DMS Document Set';
+    private static string $singular_name = 'DMS Document Set';
 
-    private static $plural_name = 'DMS Document Sets';
+    private static string $plural_name = 'DMS Document Sets';
 
-    private static $db = [
+    private static array $db = [
         'Title' => 'Varchar(255)',
         'SortBy' => 'Enum(array("LastEdited","Created","Title","Manual"), "LastEdited")',
         'SortByDirection' => 'Enum(array("DESC","ASC"), "DESC")',
         'Sort' => 'Int',
     ];
 
-    private static $has_one = [
+    private static array $has_one = [
         'Page' => SiteTree::class,
     ];
 
-    private static $many_many = [
+    private static array $many_many = [
         'Documents' => File::class,
     ];
 
-    private static $many_many_extraFields = [
+    private static array $many_many_extraFields = [
         'Documents' => [
             // Flag indicating if a document was added directly to a set - in which case it is set - or added
             // via the query-builder.
@@ -54,29 +54,29 @@ class DMSDocumentSet extends DataObject
         ],
     ];
 
-    private static $owns = [
+    private static array $owns = [
         'Documents',
     ];
 
-    private static $summary_fields = [
+    private static array $summary_fields = [
         'Title' => 'Title',
         'Documents.Count' => 'No. Documents'
     ];
 
-    private static $field_labels = [
+    private static array $field_labels = [
         'Title' => 'Title',
         'SortBy' => 'Sort Documents By',
         'SortByDirection' => 'Sort Direction',
     ];
 
-    private static $defaults = [
+    private static array $defaults = [
         'SortBy' => 'LastEdited',
         'SortByDirection' => 'DESC',
     ];
 
-    private static $default_sort = "Sort ASC";
+    private static string $default_sort = "Sort ASC";
 
-    private static $dms_document_folder = 'dms-documents';
+    private static string $dms_document_folder = 'dms-documents';
 
     public function getCMSFields()
     {
@@ -103,8 +103,8 @@ class DMSDocumentSet extends DataObject
                     'SortByDirection',
                     $this->fieldLabel('SortByDirection'),
                     [
-                        'DESC' =>  _t(__CLASS__ . '.DESC', 'Descending'),
-                        'ASC' =>  _t(__CLASS__ . '.ASC', 'Ascending')
+                        'DESC' =>  _t(self::class . '.DESC', 'Descending'),
+                        'ASC' =>  _t(self::class . '.ASC', 'Ascending')
                     ]
                 )),
                 $info = Wrapper::create(LiteralField::create(
@@ -121,20 +121,20 @@ class DMSDocumentSet extends DataObject
             if ($this->SortBy == 'Manual') {
                 $uploadField = SortableUploadField::create(
                     'Documents',
-                    _t(__CLASS__ . '.Documents', 'Documents'),
+                    _t(self::class . '.Documents', 'Documents'),
                     $this->getSortedDocuments()
                 )->setSortColumn('DocumentSort');
             } else {
                 $uploadField = UploadField::create(
                     'Documents',
-                    _t(__CLASS__ . '.Documents', 'Documents'),
+                    _t(self::class . '.Documents', 'Documents'),
                     $this->getSortedDocuments()
                 );
             }
             $fields->addFieldToTab(
                 'Root.Documents',
                 $uploadField
-                    ->setFolderName(static::$dms_document_folder)
+                    ->setFolderName(self::config()->get('dms_document_folder'))
                     ->setAllowedFileCategories('document')
             );
         } else {
@@ -147,14 +147,23 @@ class DMSDocumentSet extends DataObject
         $fields
             ->findOrMakeTab('Root.Documents')
             ->setTitle(_t(
-                __CLASS__ . '.DocumentsTabTitle',
+                self::class . '.DocumentsTabTitle',
                 'Documents ({count})',
-                ['count' => $this->Documents()->count()]
+                ['count' => $this->getDocuments()->count()]
             ));
 
         return $fields;
     }
 
+    public function getDocuments()
+    {
+        return $this->getManyManyComponents('Documents');
+    }
+
+    public function getPage()
+    {
+        return $this->getComponent('Page');
+    }
 
     /**
      * Retrieve sorted documents in this set.
@@ -163,11 +172,10 @@ class DMSDocumentSet extends DataObject
      */
     private function getSortedDocuments()
     {
-        $documents = $this->Documents()
+        return $this->getDocuments()
             ->sort([
                 ($this->SortBy == 'Manual' ? "DocumentSort" : $this->SortBy) => ($this->SortBy == 'Manual' ? "ASC" : $this->SortByDirection)
             ]);
-        return $documents;
     }
 
     /**
@@ -177,10 +185,8 @@ class DMSDocumentSet extends DataObject
      */
     public function getFilteredDocuments()
     {
-        $documents = $this->Documents()
-            ->filterByCallback(function($item, $list) {
-                return ($item->canView());
-            })
+        $documents = $this->getDocuments()
+            ->filterByCallback(fn($item, $list) => $item->canView())
             ->sort([
                 ($this->SortBy == 'Manual' ? "DocumentSort" : $this->SortBy) => ($this->SortBy == 'Manual' ? "ASC" : $this->SortByDirection)
             ]);
@@ -194,10 +200,10 @@ class DMSDocumentSet extends DataObject
      */
     public function canView($member = null)
     {
-        if ($this->Page()) {
-            return $this->Page()->canView($member);
+        if ($page = $this->getPage()) {
+            return $page->canView($member);
         }
-        return false;
+        return parent::canView($member);
     }
 
     /**
@@ -206,10 +212,10 @@ class DMSDocumentSet extends DataObject
      */
     public function canEdit($member = null)
     {
-        if ($this->Page()) {
-            return $this->Page()->canEdit($member);
+        if ($page = $this->getPage()) {
+            return $page->canEdit($member);
         }
-        return false;
+        return parent::canEdit($member);
     }
 
     /**
@@ -218,10 +224,10 @@ class DMSDocumentSet extends DataObject
      */
     public function canDelete($member = null)
     {
-        if ($this->Page()) {
-            return $this->Page()->canDelete($member);
+        if ($page = $this->getPage()) {
+            return $page->canDelete($member);
         }
-        return false;
+        return parent::canDelete($member);
     }
 
     /**
@@ -230,10 +236,10 @@ class DMSDocumentSet extends DataObject
      */
     public function canCreate($member = null, $context = [])
     {
-        if ($this->Page()) {
-            return $this->Page()->canCreate($member);
+        if ($page = $this->getPage()) {
+            return $page->canCreate($member, $context);
         }
-        return false;
+        return parent::canCreate($member, $context);
     }
 
     /**
@@ -243,7 +249,7 @@ class DMSDocumentSet extends DataObject
      * {@inheritDoc}
      * @see \SilverStripe\ORM\DataObject::requireTable()
      */
-    public function requireTable()
+    public function requireTable(): void
     {
         $checkTable = DB::query("SHOW TABLES LIKE 'DMSDocument_versions'")->numRecords();
         if ($checkTable > 0) {
@@ -251,9 +257,7 @@ class DMSDocumentSet extends DataObject
             if ($checkField > 0) {
                 // make tables obsolete
                 $dbSchema = DB::get_schema();
-                $dbSchema->schemaUpdate(function () {
-                    return true;
-                });
+                $dbSchema->schemaUpdate(fn(): true => true);
                 if (!$dbSchema->hasTable('_obsolete_DMSDocument_versions')) {
                     DB::dont_require_table('DMSDocument_versions');
                 }

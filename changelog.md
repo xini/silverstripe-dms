@@ -4,9 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.0]
+
+* Upgrade to Silverstripe 6
+
 ## [3.3.0]
 
-* SS5 compatibility
+* Silverstripe 5 compatibility
 
 ## [3.2.3]
 
